@@ -1,0 +1,9 @@
+uuid: a1b55bbb-a929-47e5-87e2-3a7fc5956922
+name: vRx
+slug: vrx
+
+description: >-
+  Vicarius vRx is a vulnerability remediation platform that discovers, prioritizes and remediates vulnerabilities on endpoints and servers. This intake collects vulnerability findings detected on managed assets.
+
+data_sources:
+  Third-party application logs: vRx vulnerability findings on managed assets

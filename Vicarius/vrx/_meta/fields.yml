@@ -1,0 +1,50 @@
+vicarius.vrx.finding.epss_score:
+  description: EPSS score (probability of exploitation in the next 30 days)
+  name: vicarius.vrx.finding.epss_score
+  type: float
+
+vicarius.vrx.finding.first_seen:
+  description: Date the finding was first detected on the asset
+  name: vicarius.vrx.finding.first_seen
+  type: date
+
+vicarius.vrx.finding.in_cisa_kev:
+  description: Whether the vulnerability is listed in the CISA Known Exploited Vulnerabilities
+    catalog
+  name: vicarius.vrx.finding.in_cisa_kev
+  type: boolean
+
+vicarius.vrx.finding.internal_id:
+  description: vRx internal identifier of the finding
+  name: vicarius.vrx.finding.internal_id
+  type: keyword
+
+vicarius.vrx.finding.last_seen:
+  description: Date the finding was last detected on the asset
+  name: vicarius.vrx.finding.last_seen
+  type: date
+
+vicarius.vrx.finding.status:
+  description: Status of the finding (e.g. ACTIVE)
+  name: vicarius.vrx.finding.status
+  type: keyword
+
+vicarius.vrx.product.id:
+  description: vRx identifier of the affected product
+  name: vicarius.vrx.product.id
+  type: keyword
+
+vicarius.vrx.product.name:
+  description: Name of the affected product
+  name: vicarius.vrx.product.name
+  type: keyword
+
+vicarius.vrx.product.publisher:
+  description: Publisher of the affected product
+  name: vicarius.vrx.product.publisher
+  type: keyword
+
+vicarius.vrx.product.type:
+  description: Type of the affected product (e.g. OS, application)
+  name: vicarius.vrx.product.type
+  type: keyword

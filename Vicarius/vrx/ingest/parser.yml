@@ -1,0 +1,79 @@
+name: vrx
+pipeline:
+  - name: parsed_event
+    external:
+      name: json.parse-json
+      properties:
+        input_field: "{{original.message}}"
+        output_field: message
+
+  - name: parsed_timestamp
+    external:
+      name: date.parse
+      properties:
+        input_field: "{{parsed_event.message.timestamp}}"
+        output_field: datetime
+
+  - name: set_common_fields
+
+  - name: set_vulnerability_fields
+    filter: "{{parsed_event.message.event_type == 'vulnerability_finding'}}"
+
+stages:
+  set_common_fields:
+    actions:
+      - set:
+          observer.vendor: "Vicarius"
+          observer.product: "Vicarius vRx"
+          observer.type: "scanner"
+          "@timestamp": "{{parsed_timestamp.datetime}}"
+
+  set_vulnerability_fields:
+    actions:
+      - set:
+          event.kind: "alert"
+          event.category: ["vulnerability"]
+          event.type: ["info"]
+          event.dataset: "{{parsed_event.message.event_type}}"
+          event.risk_score: "{{parsed_event.message.risk_score}}"
+
+      - translate:
+        dictionary:
+          "CRITICAL": "4"
+          "HIGH": "3"
+          "MEDIUM": "2"
+          "LOW": "1"
+        mapping:
+          parsed_event.message.severity: event.severity
+        fallback: "0"
+
+      - set:
+          vulnerability.id: "{{parsed_event.message.finding_id}}"
+          vulnerability.enumeration: "{{parsed_event.message.finding_type}}"
+          vulnerability.severity: "{{parsed_event.message.severity | lower}}"
+          vulnerability.score.base: "{{parsed_event.message.cvss_base_score}}"
+          vulnerability.scanner.vendor: "Vicarius"
+
+          host.id: "{{parsed_event.message.asset_id}}"
+          host.name: "{{parsed_event.message.asset_name}}"
+          host.os.platform: "{{parsed_event.message.asset_os | lower}}"
+          host.os.version: "{{parsed_event.message.asset_os_version}}"
+
+          vicarius.vrx.finding.internal_id: "{{parsed_event.message.internal_id}}"
+          vicarius.vrx.finding.status: "{{parsed_event.message.status}}"
+          vicarius.vrx.finding.epss_score: "{{parsed_event.message.epss_score}}"
+          vicarius.vrx.finding.in_cisa_kev: "{{parsed_event.message.in_cisa_kev}}"
+          vicarius.vrx.finding.first_seen: "{{parsed_event.message.first_seen}}"
+          vicarius.vrx.finding.last_seen: "{{parsed_event.message.last_seen}}"
+
+          vicarius.vrx.product.id: "{{parsed_event.message.product_id}}"
+          vicarius.vrx.product.name: "{{parsed_event.message.product_name}}"
+          vicarius.vrx.product.type: "{{parsed_event.message.product_type}}"
+          vicarius.vrx.product.publisher: "{{parsed_event.message.publisher_name}}"
+
+          related.hosts: ["{{parsed_event.message.asset_name}}"]
+
+      # The affected product is the host OS only when the finding is about the OS itself
+      - set:
+          host.os.name: "{{parsed_event.message.product_name}}"
+        filter: "{{parsed_event.message.product_type == 'OS'}}"

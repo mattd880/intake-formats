@@ -1,0 +1,18 @@
+[
+  {
+    "value": "Vulnerability {vulnerability.id} ({vulnerability.severity}) on {host.name} affecting {vicarius.vrx.product.name}",
+    "conditions": [
+      { "field": "vulnerability.id" },
+      { "field": "host.name" },
+      { "field": "vicarius.vrx.product.name" }
+    ]
+  },
+  {
+    "value": "Vulnerability {vulnerability.id} ({vulnerability.severity}) detected",
+    "conditions": [{ "field": "vulnerability.id" }]
+  },
+  {
+    "value": "Vicarius vRx event",
+    "conditions": []
+  }
+]
